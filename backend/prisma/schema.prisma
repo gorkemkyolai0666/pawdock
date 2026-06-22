@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Facility {
+  id            String   @id @default(uuid())
+  name          String
+  phone         String   @default("")
+  address       String   @default("")
+  city          String   @default("")
+  district      String   @default("")
+  capacity      Int      @default(20)
+  timezone      String   @default("Europe/Istanbul")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  users         User[]
+  pets          Pet[]
+  rooms         Room[]
+  bookings      Booking[]
+  careLogs      CareLog[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         String   @default("staff")
+  facilityId   String
+  facility     Facility @relation(fields: [facilityId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Species {
+  dog
+  cat
+  bird
+  rabbit
+  hamster
+  fish
+  reptile
+  other
+}
+
+enum PetSize {
+  tiny
+  small
+  medium
+  large
+  giant
+}
+
+model Owner {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String   @default("")
+  address     String?
+  notes       String?
+  pets        Pet[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Pet {
+  id              String    @id @default(uuid())
+  name            String
+  species         Species
+  breed           String    @default("")
+  size            PetSize   @default(medium)
+  age             Int?
+  weight          Float?
+  color           String?
+  microchipId     String?
+  vaccinated      Boolean   @default(false)
+  neutered        Boolean   @default(false)
+  specialNeeds    String?
+  dietaryNotes    String?
+  allergies       String?
+  notes           String?
+  ownerId         String
+  owner           Owner     @relation(fields: [ownerId], references: [id])
+  facilityId      String
+  facility        Facility  @relation(fields: [facilityId], references: [id])
+  bookings        Booking[]
+  careLogs        CareLog[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum RoomType {
+  standard
+  premium
+  suite
+  outdoor
+  isolation
+}
+
+enum RoomStatus {
+  available
+  occupied
+  maintenance
+  reserved
+}
+
+model Room {
+  id          String     @id @default(uuid())
+  name        String
+  roomType    RoomType   @default(standard)
+  status      RoomStatus @default(available)
+  capacity    Int        @default(1)
+  dailyRate   Float      @default(0)
+  floor       Int        @default(1)
+  hasCamera   Boolean    @default(false)
+  notes       String?
+  facilityId  String
+  facility    Facility   @relation(fields: [facilityId], references: [id])
+  bookings    Booking[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  checked_in
+  checked_out
+  cancelled
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  petId         String
+  pet           Pet           @relation(fields: [petId], references: [id])
+  roomId        String
+  room          Room          @relation(fields: [roomId], references: [id])
+  checkIn       DateTime
+  checkOut      DateTime
+  status        BookingStatus @default(pending)
+  totalPrice    Float         @default(0)
+  notes         String?
+  facilityId    String
+  facility      Facility      @relation(fields: [facilityId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum CareType {
+  feeding
+  walking
+  grooming
+  playtime
+  medication
+  health_check
+  bath
+  training
+  other
+}
+
+model CareLog {
+  id          String   @id @default(uuid())
+  petId       String
+  pet         Pet      @relation(fields: [petId], references: [id])
+  careType    CareType
+  description String
+  staffName   String
+  logDate     DateTime @default(now())
+  duration    Int?
+  notes       String?
+  facilityId  String
+  facility    Facility @relation(fields: [facilityId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

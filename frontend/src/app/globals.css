@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --bg-primary: #FFFBF0;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --text-primary: #1A1520;
+    --text-secondary: #4A3F55;
+    --text-muted: #7A6F85;
+    --border: #E8E0F0;
+    --accent-amber: #F59E0B;
+    --accent-violet: #8B5CF6;
+    --accent-emerald: #10B981;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(232, 224, 240, 0.5);
+  }
+
+  .dark {
+    --bg-primary: #1A1520;
+    --bg-secondary: #261E2E;
+    --bg-card: rgba(38, 30, 46, 0.9);
+    --text-primary: #F8F5FC;
+    --text-secondary: #C8BFD4;
+    --text-muted: #8A7F95;
+    --border: #3D3248;
+    --accent-amber: #FFD06A;
+    --accent-violet: #A78BFA;
+    --accent-emerald: #34D399;
+    --glass-bg: rgba(38, 30, 46, 0.7);
+    --glass-border: rgba(61, 50, 72, 0.5);
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+  }
+
+  .gradient-paw {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
+  }
+
+  .gradient-violet {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  }
+
+  .gradient-emerald {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  }
+
+  .btn-primary {
+    @apply px-5 py-2.5 rounded-lg font-semibold text-white transition-all duration-200 hover:shadow-lg active:scale-[0.98];
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #FFD06A 0%, #F59E0B 100%);
+    color: #451A03;
+  }
+
+  .btn-secondary {
+    @apply px-5 py-2.5 rounded-lg font-medium transition-all duration-200 hover:shadow-md active:scale-[0.98];
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 outline-none;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .input-field:focus {
+    border-color: var(--accent-amber);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  }
+
+  .input-field::placeholder {
+    color: var(--text-muted);
+  }
+}

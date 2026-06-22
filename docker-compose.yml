@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: pawdock
+      POSTGRES_PASSWORD: pawdock123
+      POSTGRES_DB: pawdock
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "4035:4035"
+    environment:
+      DATABASE_URL: postgresql://pawdock:pawdock123@postgres:5432/pawdock?schema=public
+      JWT_SECRET: pawdock-dev-secret
+      FRONTEND_URL: http://localhost:3035
+      PORT: 4035
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3035:3035"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4035/api
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
